@@ -2,8 +2,8 @@
 #define CONFIG_H
 
 // ============ WiFi 配置 ============
-#define WIFI_SSID "test"
-#define WIFI_PASSWORD "Tt123456"
+#define WIFI_SSID "你的WiFi名称"
+#define WIFI_PASSWORD "你的WiFi密码"
 
 // ============ 服务器配置 ============
 // 生产环境服务器
@@ -17,7 +17,7 @@
 #define API_CMD_STATUS "/api/device/command/status"
 
 // 设备API密钥（与后端配置一致）
-#define DEVICE_API_KEY "8dc77f5ea8df913a7a99027bc1975011c9b92cc8a67d67784652e3d3e3830b84"
+#define DEVICE_API_KEY "你的设备API密钥"
 
 // ============ 引脚定义 ============
 // 传感器引脚

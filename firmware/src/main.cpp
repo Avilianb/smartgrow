@@ -214,12 +214,14 @@ String buildJsonPayload(const SensorData& data) {
 void sendDataToServer(const SensorData& data) {
   HTTPClient http;
 
+  // 构建URL
   String url = String("http://") + SERVER_HOST + ":" + SERVER_PORT + API_ENDPOINT;
   Serial.print("[HTTP] POST ");
   Serial.println(url);
 
   http.begin(url);
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("X-Device-API-Key", DEVICE_API_KEY);  // 添加设备API密钥
 
   String payload = buildJsonPayload(data);
   Serial.print("[HTTP] 发送: ");
