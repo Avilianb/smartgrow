@@ -1,0 +1,39 @@
+# Git 相关
+.git
+.gitignore
+
+# 构建产物
+*.exe
+*.exe~
+server
+server.exe
+
+# 数据和日志（运行时挂载）
+data/
+logs/
+
+# 测试文件
+tests/
+test_*.go
+test_*.ps1
+*_test.go
+
+# IDE 和编辑器
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# 文档
+README.md
+Makefile
+
+# Docker 相关
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# 临时文件
+*.log
+*.tmp

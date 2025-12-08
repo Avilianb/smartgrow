@@ -1,0 +1,7 @@
+{
+  "name": "SmartGrow 智能灌溉",
+  "description": "一个现代化的智能灌溉管理系统仪表盘，具有实时监控、动态调度和设备控制功能。",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

@@ -1,0 +1,102 @@
+# ==========================================
+# SmartGrow 项目 - Git 忽略文件
+# ==========================================
+
+# ========== 前端 ==========
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.production
+frontend/package-lock.json
+frontend/.vite/
+
+# ========== 后端 ==========
+# 编译产物
+backend/server
+backend/*.exe
+backend/main
+
+# 数据库文件（不上传实际数据）
+*.db
+*.db-shm
+*.db-wal
+
+# 日志文件
+*.log
+logs/
+backend/logs/
+
+# 数据目录
+data/
+backend/data/
+
+# Go 依赖和缓存
+backend/vendor/
+
+# ========== 配置文件（敏感信息）==========
+# 生产环境配置（包含密钥）
+backend/configs/config.yaml
+# 开发环境配置
+backend/configs/config.dev.yaml
+
+# 环境变量文件
+.env
+.env.local
+.env.production
+
+# ========== 固件 ==========
+firmware/.pio/
+firmware/.vscode/
+firmware/lib/
+firmware/test/
+
+# ========== 系统文件 ==========
+# Windows
+Thumbs.db
+Desktop.ini
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.directory
+
+# ========== IDE ==========
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+
+# ========== 临时文件 ==========
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ========== 部署相关 ==========
+# 部署包
+*.tar.gz
+*.zip
+
+# 备份文件
+*.backup
+backup/
+
+# ========== 其他 ==========
+# SSH 密钥（如果有）
+*.pem
+*.key
+id_rsa*
+
+# 测试覆盖率报告
+coverage/
+*.cover

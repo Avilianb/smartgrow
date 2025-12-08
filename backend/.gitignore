@@ -1,0 +1,36 @@
+# 忽略编译产物
+/backend/bin/
+/backend/server
+/backend/server.exe
+
+# 忽略数据文件
+/backend/data/
+/backend/logs/
+*.db
+*.db-journal
+
+# 忽略临时文件
+*.log
+*.tmp
+*.swp
+*~
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+.DS_Store
+
+# 环境变量
+.env
+.env.local

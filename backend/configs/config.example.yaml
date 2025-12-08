@@ -1,0 +1,56 @@
+server:
+  host: 0.0.0.0
+  port: 8080
+  mode: release  # debug, release
+
+database:
+  path: /opt/irrigation/db/irrigation.db
+  # 本地开发时使用相对路径
+  dev_path: ./data/irrigation.db
+
+weather:
+  api_host: devapi.qweather.com  # 开发版：devapi.qweather.com，生产版：api.qweather.com
+  api_key: YOUR_QWEATHER_API_KEY  # 在 https://dev.qweather.com 获取
+  endpoint: /v7/weather/15d
+  timeout: 10s
+  default_location:
+    latitude: 39.92
+    longitude: 116.41
+
+planner:
+  soil_optimal_min: 1500
+  soil_optimal_max: 2500
+  max_irrigation_per_day: 5.0
+  base_et: 2.0
+  temp_factor: 0.1
+  rain_conversion: 0.8
+  adc_to_moisture: 40.95
+  cost_w1: 10.0
+  cost_w2: 1.0
+  cost_w3: 2.0
+
+logging:
+  level: info  # debug, info, warn, error
+  file: /opt/irrigation/logs/server.log
+  dev_file: ./logs/server.log
+
+security:
+  # JWT密钥 - 生产环境必须修改（至少32字符）
+  # 生成方法: openssl rand -base64 48
+  jwt_secret: "CHANGE_THIS_IN_PRODUCTION_MIN_32_CHARS"
+
+  # Token有效期（小时）
+  jwt_expire_hours: 24
+
+  # 允许的跨域来源
+  allowed_origins:
+    - "http://localhost:5173"      # 本地开发
+    - "http://localhost:3000"      # 备用开发端口
+    - "https://your-domain.com"    # 生产环境域名
+
+  # 速率限制（每分钟请求数）
+  rate_limit_per_minute: 60
+
+  # 设备API密钥 - ESP32设备认证使用，生产环境必须修改
+  # 生成方法: openssl rand -hex 32
+  device_api_key: "CHANGE_THIS_IN_PRODUCTION"
