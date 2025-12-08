@@ -135,31 +135,31 @@ export const UserManagement: React.FC = () => {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-4 md:p-6 max-w-7xl mx-auto">
       {/* 页面标题 */}
-      <div className="mb-6 flex justify-between items-center">
+      <div className="mb-4 md:mb-6 flex flex-col md:flex-row justify-between md:items-center gap-3 md:gap-0">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">用户管理</h1>
-          <p className="text-gray-600 mt-1">管理系统用户和设备 ({users.length} 个用户)</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">用户管理</h1>
+          <p className="text-sm md:text-base text-gray-600 mt-1">管理系统用户和设备 ({users.length} 个用户)</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-2 md:gap-3">
           <button
             onClick={() => {
               setLoading(true);
               loadUsers();
             }}
-            className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition flex items-center gap-2"
+            className="bg-gray-100 text-gray-700 px-3 md:px-4 py-2 rounded-lg hover:bg-gray-200 transition flex items-center gap-1.5 md:gap-2 text-sm md:text-base"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            刷新
+            <span className="hidden sm:inline">刷新</span>
           </button>
           <button
             onClick={() => setShowAddModal(true)}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+            className="bg-blue-600 text-white px-4 md:px-6 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-1.5 md:gap-2 text-sm md:text-base"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             添加用户

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, MapPin, ScrollText, User } from 'lucide-react';
+import { LayoutDashboard, MapPin, ScrollText, Users, User } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
@@ -10,11 +10,17 @@ import { useAuth } from '../contexts/AuthContext';
 export const MobileBottomNav: React.FC = () => {
   const { isAdmin } = useAuth();
 
-  const navItems = [
+  // 管理员和普通用户的导航项
+  const navItems = isAdmin ? [
+    { to: '/', icon: LayoutDashboard, label: '仪表盘' },
+    { to: '/location', icon: MapPin, label: '位置' },
+    { to: '/admin/users', icon: Users, label: '用户' },
+    { to: '/change-password', icon: User, label: '我的' },
+  ] : [
     { to: '/', icon: LayoutDashboard, label: '仪表盘' },
     { to: '/location', icon: MapPin, label: '位置' },
     { to: '/logs', icon: ScrollText, label: '日志' },
-    { to: isAdmin ? '/admin/users' : '/change-password', icon: User, label: isAdmin ? '用户' : '我的' },
+    { to: '/change-password', icon: User, label: '我的' },
   ];
 
   return (

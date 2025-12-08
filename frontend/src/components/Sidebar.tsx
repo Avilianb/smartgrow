@@ -1,21 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, MapPin, ScrollText, Sprout, Users, LogOut, Key, Menu, X } from 'lucide-react';
+import { LayoutDashboard, MapPin, ScrollText, Sprout, Users, LogOut, Key } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export const Sidebar: React.FC = () => {
   const { isAdmin, user, logout } = useAuth();
   const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
-    setIsMobileMenuOpen(false);
-  };
-
-  const handleNavClick = () => {
-    setIsMobileMenuOpen(false);
   };
 
   const navItems = [
@@ -38,37 +32,19 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-          aria-label="Toggle menu"
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
+          aria-label="退出登录"
         >
-          {isMobileMenuOpen ? (
-            <X size={24} className="text-slate-700" />
-          ) : (
-            <Menu size={24} className="text-slate-700" />
-          )}
+          <LogOut size={18} />
+          <span className="text-sm font-medium">退出</span>
         </button>
       </div>
 
-      {/* 移动端遮罩层 */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* 侧边栏 - 桌面端固定显示，移动端可折叠 */}
-      <aside
-        className={`
-          fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-100 flex flex-col z-50
-          transition-transform duration-300 ease-in-out
-          md:translate-x-0
-          ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-        `}
-      >
+      {/* 侧边栏 - 仅桌面端显示 */}
+      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-100 flex-col z-50">
         {/* Brand - 桌面端显示 */}
-        <div className="h-20 flex items-center px-8 border-b border-slate-50 hidden md:flex">
+        <div className="h-20 flex items-center px-8 border-b border-slate-50">
           <div className="flex items-center gap-3 text-primary-600">
             <div className="bg-primary-50 p-2 rounded-xl">
               <Sprout size={24} className="text-primary-600" />
@@ -76,9 +52,6 @@ export const Sidebar: React.FC = () => {
             <span className="font-bold text-xl tracking-tight text-slate-800">SmartGrow</span>
           </div>
         </div>
-
-        {/* 移动端顶部 - 占位 */}
-        <div className="h-16 md:hidden"></div>
 
         {/* User Info */}
         {user && (
@@ -103,7 +76,6 @@ export const Sidebar: React.FC = () => {
             <NavLink
               key={item.to}
               to={item.to}
-              onClick={handleNavClick}
               className={({ isActive }) => `
                 flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 group
                 ${isActive

@@ -111,23 +111,23 @@ export const SystemLogs: React.FC = () => {
   };
 
   return (
-    <div className="p-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 animate-[fadeIn_0.5s_ease-out]">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <header>
-            <h1 className="text-2xl font-bold text-slate-800">系统日志</h1>
-            <p className="text-slate-500">审计跟踪与设备事件</p>
+            <h1 className="text-xl md:text-2xl font-bold text-slate-800">系统日志</h1>
+            <p className="text-sm md:text-base text-slate-500">审计跟踪与设备事件</p>
         </header>
-        <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
-                <Filter size={16} /> 筛选
+        <div className="flex gap-2 md:gap-3">
+            <button className="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 text-xs md:text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
+                <Filter size={14} className="md:w-4 md:h-4" /> <span className="hidden sm:inline">筛选</span>
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
-                <Download size={16} /> 导出 CSV
+            <button className="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 text-xs md:text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
+                <Download size={14} className="md:w-4 md:h-4" /> <span className="hidden sm:inline">导出 CSV</span>
             </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
         {/* Search Bar */}
         <div className="p-4 border-b border-slate-100">
             <div className="relative max-w-md">
@@ -144,13 +144,13 @@ export const SystemLogs: React.FC = () => {
 
         {/* Table */}
         <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[640px]">
                 <thead className="bg-slate-50/50">
                     <tr>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">时间戳</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">级别</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">设备 ID</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">消息内容</th>
+                        <th className="px-3 md:px-6 py-3 md:py-4 text-left text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider">时间戳</th>
+                        <th className="px-3 md:px-6 py-3 md:py-4 text-left text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider">级别</th>
+                        <th className="px-3 md:px-6 py-3 md:py-4 text-left text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider">设备 ID</th>
+                        <th className="px-3 md:px-6 py-3 md:py-4 text-left text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-wider">消息内容</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -159,30 +159,35 @@ export const SystemLogs: React.FC = () => {
                         <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
                           <div className="flex flex-col items-center gap-2">
                             <div className="w-8 h-8 border-3 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-                            <span>加载日志中...</span>
+                            <span className="text-sm">加载日志中...</span>
                           </div>
                         </td>
                       </tr>
                     ) : filteredLogs.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
+                        <td colSpan={4} className="px-6 py-12 text-center text-sm text-slate-500">
                           {searchTerm ? '没有匹配的日志记录' : '暂无日志记录'}
                         </td>
                       </tr>
                     ) : (
                       filteredLogs.map((log) => (
                         <tr key={log.id} className="hover:bg-slate-50/50 transition-colors">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">
-                                {new Date(log.timestamp).toLocaleString('zh-CN')}
+                            <td className="px-3 md:px-6 py-3 md:py-4 text-[11px] md:text-sm text-slate-500 font-mono">
+                                {new Date(log.timestamp).toLocaleString('zh-CN', {
+                                  month: '2-digit',
+                                  day: '2-digit',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            <td className="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
                                 {getLevelBadge(log.level)}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-700">
-                                {log.device_id}
+                            <td className="px-3 md:px-6 py-3 md:py-4 text-[11px] md:text-sm font-medium text-slate-700">
+                                <div className="max-w-[80px] md:max-w-none truncate">{log.device_id}</div>
                             </td>
-                            <td className="px-6 py-4 text-sm text-slate-600">
-                                {log.message}
+                            <td className="px-3 md:px-6 py-3 md:py-4 text-[11px] md:text-sm text-slate-600">
+                                <div className="max-w-[200px] md:max-w-none line-clamp-2 md:line-clamp-none">{log.message}</div>
                             </td>
                         </tr>
                       ))
