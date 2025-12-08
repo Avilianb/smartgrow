@@ -39,6 +39,7 @@ export const LocationManager: React.FC = () => {
   const [isLocating, setIsLocating] = useState(false);
   const [forecast, setForecast] = useState<WeatherForecast[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [isFirstTime, setIsFirstTime] = useState(false); // 是否首次使用
 
   // 初始加载位置和天气数据
   useEffect(() => {
@@ -48,10 +49,12 @@ export const LocationManager: React.FC = () => {
       if (location) {
         setLat(location.latitude.toFixed(4));
         setLng(location.longitude.toFixed(4));
-        // 根据坐标范围显示大致地区
         setAddress(getRegionName(location.latitude, location.longitude));
+        setIsFirstTime(false);
       } else {
+        // 首次使用，没有保存过位置
         setAddress("中国, 北京 (默认)");
+        setIsFirstTime(true);
       }
 
       // 加载天气预报
@@ -180,6 +183,7 @@ export const LocationManager: React.FC = () => {
       console.log('Saving location:', { latitude, longitude, apiUrl: window.location.origin });
       const success = await updateLocation(latitude, longitude);
       if (success) {
+        setIsFirstTime(false); // 保存成功后不再是首次
         alert("✅ 位置已保存！正在获取最新天气预报...");
         // 重新获取天气预报
         const weatherData = await getForecast();
@@ -264,6 +268,28 @@ export const LocationManager: React.FC = () => {
                 </span>
              </div>
           </div>
+
+          {/* 首次使用提示 */}
+          {isFirstTime && (
+            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <MapPin size={20} className="text-blue-600 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="text-sm font-bold text-blue-900 mb-1">
+                    💡 首次使用提示
+                  </h3>
+                  <p className="text-xs text-blue-700 leading-relaxed">
+                    当前显示的是默认位置（北京）。为了获取准确的天气数据和灌溉建议：
+                  </p>
+                  <ol className="text-xs text-blue-700 mt-2 space-y-1 ml-4 list-decimal">
+                    <li>在地图上点击您的实际位置，或点击"使用当前精确位置"按钮</li>
+                    <li>点击下方的"保存坐标"按钮</li>
+                    <li>系统将自动获取该位置的天气预报</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
              <div>

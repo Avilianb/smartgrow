@@ -146,10 +146,20 @@ export const getLocation = async (): Promise<{ latitude: number; longitude: numb
     const response = await fetch(`${API_BASE}/location/${DEVICE_ID}`, {
       headers: getHeaders(),
     });
-    if (!response.ok) return null;
+    if (!response.ok) {
+      // 404是预期的情况（首次使用时没有保存过位置）
+      if (response.status === 404) {
+        console.info('📍 暂无保存的位置信息，使用默认位置');
+        return null;
+      }
+      throw new Error(`HTTP ${response.status}`);
+    }
     return response.json();
   } catch (error) {
-    console.error('Error fetching location:', error);
+    // 只有非404错误才打印error级别日志
+    if (error instanceof Error && !error.message.includes('404')) {
+      console.error('获取位置信息失败:', error);
+    }
     return null;
   }
 };
@@ -178,7 +188,7 @@ export const updateForecast = async (latitude?: number, longitude?: number): Pro
     if (latitude === undefined || longitude === undefined) {
       const location = await getLocation();
       if (!location) {
-        console.error('No location available for forecast update');
+        console.info('⛅ 暂无位置信息，无法更新天气预报');
         return false;
       }
       latitude = location.latitude;
@@ -196,7 +206,7 @@ export const updateForecast = async (latitude?: number, longitude?: number): Pro
     });
     return response.ok;
   } catch (error) {
-    console.error('Error updating forecast:', error);
+    console.error('更新天气预报失败:', error);
     return false;
   }
 };
@@ -221,7 +231,7 @@ export const getForecastData = async (): Promise<any[]> => {
 // 获取天气预报
 export const getForecast = async (): Promise<WeatherForecast[]> => {
   try {
-    // 先触发更新天气预报
+    // 先触发更新天气预报（静默失败）
     await updateForecast();
 
     // 等待一小段时间让后端处理
@@ -248,7 +258,7 @@ export const getForecast = async (): Promise<WeatherForecast[]> => {
       });
     }
   } catch (error) {
-    console.error('Error fetching forecast:', error);
+    console.info('⛅ 暂无天气数据，显示默认天气信息');
   }
 
   // 返回默认数据
