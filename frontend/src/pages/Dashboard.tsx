@@ -176,11 +176,11 @@ export const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="p-8 space-y-8 animate-fadeIn">
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-800">系统仪表盘</h1>
-        <div className="flex items-center gap-3">
-          <p className="text-slate-500">设备实时概览: {status.device_id}</p>
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 animate-fadeIn">
+      <header className="mb-4 md:mb-8">
+        <h1 className="text-xl md:text-2xl font-bold text-slate-800">系统仪表盘</h1>
+        <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+          <p className="text-sm md:text-base text-slate-500">设备实时概览: {status.device_id}</p>
           {dataAge && dataAge !== '刚刚' && !dataAge.includes('分钟') && (
             <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
               ⚠️ 数据已过期 ({dataAge})
@@ -190,7 +190,7 @@ export const Dashboard: React.FC = () => {
       </header>
 
       {/* Top Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {/* 土壤湿度卡片 */}
         <div onClick={() => toggleCard('soil')}>
           <StatCard
@@ -251,12 +251,12 @@ export const Dashboard: React.FC = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
         {/* Main Chart Section */}
-        <div className="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-slate-100 hover:shadow-lg transition-shadow duration-300">
-          <div className="flex items-center justify-between mb-6">
+        <div className="lg:col-span-2 bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 hover:shadow-lg transition-shadow duration-300">
+          <div className="flex items-center justify-between mb-4 md:mb-6">
             <div>
-              <h2 className="text-lg font-bold text-slate-800">24小时环境趋势</h2>
+              <h2 className="text-base md:text-lg font-bold text-slate-800">24小时环境趋势</h2>
               {history.length === 0 && (
                 <p className="text-xs text-amber-600 mt-1">⚠️ 暂无历史数据</p>
               )}
@@ -270,14 +270,14 @@ export const Dashboard: React.FC = () => {
               </span>
             </div>
           </div>
-          <div className="h-[300px]">
+          <div className="h-[250px] md:h-[300px]">
             {history.length > 0 ? (
               <MultiLineChart data={history} />
             ) : (
               <div className="flex items-center justify-center h-full text-slate-400">
                 <div className="text-center">
-                  <p className="text-lg font-medium mb-2">暂无图表数据</p>
-                  <p className="text-sm">等待 ESP32 设备上传传感器数据...</p>
+                  <p className="text-base md:text-lg font-medium mb-2">暂无图表数据</p>
+                  <p className="text-xs md:text-sm">等待 ESP32 设备上传传感器数据...</p>
                 </div>
               </div>
             )}
@@ -285,58 +285,58 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Control & Status Panel */}
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
             {/* Quick Actions */}
-            <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
-                <h3 className="text-lg font-bold text-slate-800 mb-4">快捷操作</h3>
-                <div className="space-y-3">
-                    <button 
+            <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100">
+                <h3 className="text-base md:text-lg font-bold text-slate-800 mb-3 md:mb-4">快捷操作</h3>
+                <div className="space-y-2 md:space-y-3">
+                    <button
                         onClick={handleWaterNow}
-                        className="w-full flex items-center justify-between p-4 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors group"
+                        className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors group active:scale-95"
                     >
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white rounded-lg shadow-sm group-hover:scale-110 transition-transform">
-                                <Droplets size={18} className="text-blue-500" />
+                        <div className="flex items-center gap-2 md:gap-3">
+                            <div className="p-1.5 md:p-2 bg-white rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                                <Droplets size={16} className="md:w-[18px] md:h-[18px] text-blue-500" />
                             </div>
-                            <span className="font-semibold">立即浇水</span>
+                            <span className="font-semibold text-sm md:text-base">立即浇水</span>
                         </div>
-                        <Play size={16} />
+                        <Play size={14} className="md:w-4 md:h-4" />
                     </button>
 
-                    <button 
+                    <button
                         onClick={handleShadeToggle}
-                        className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 transition-colors group"
+                        className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 transition-colors group active:scale-95"
                     >
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white rounded-lg shadow-sm group-hover:scale-110 transition-transform">
-                                <Umbrella size={18} className="text-slate-500" />
+                        <div className="flex items-center gap-2 md:gap-3">
+                            <div className="p-1.5 md:p-2 bg-white rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                                <Umbrella size={16} className="md:w-[18px] md:h-[18px] text-slate-500" />
                             </div>
-                            <span className="font-semibold">切换遮阳</span>
+                            <span className="font-semibold text-sm md:text-base">切换遮阳</span>
                         </div>
-                        <span className="text-xs uppercase tracking-wider font-bold bg-white px-2 py-1 rounded text-slate-400">
+                        <span className="text-[10px] md:text-xs uppercase tracking-wider font-bold bg-white px-2 py-1 rounded text-slate-400">
                             {getShadeStateText(status.shade_state)}
                         </span>
                     </button>
 
-                    <button 
+                    <button
                         onClick={handleRecalculate}
-                        className="w-full flex items-center justify-between p-4 rounded-xl bg-primary-50 text-primary-700 hover:bg-primary-100 transition-colors group"
+                        className="w-full flex items-center justify-between p-3 md:p-4 rounded-xl bg-primary-50 text-primary-700 hover:bg-primary-100 transition-colors group active:scale-95"
                     >
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white rounded-lg shadow-sm group-hover:scale-110 transition-transform">
-                                <RotateCcw size={18} className="text-primary-500" />
+                        <div className="flex items-center gap-2 md:gap-3">
+                            <div className="p-1.5 md:p-2 bg-white rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                                <RotateCcw size={16} className="md:w-[18px] md:h-[18px] text-primary-500" />
                             </div>
-                            <span className="font-semibold">重新计算计划</span>
+                            <span className="font-semibold text-sm md:text-base">重新计算计划</span>
                         </div>
                     </button>
                 </div>
             </div>
-            
+
             {/* Status Summary */}
-            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl md:rounded-3xl p-4 md:p-6 text-white shadow-lg relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-10 -mt-10"></div>
-                <h3 className="text-lg font-bold mb-4 relative z-10">系统状态</h3>
-                <div className="space-y-4 relative z-10">
+                <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4 relative z-10">系统状态</h3>
+                <div className="space-y-3 md:space-y-4 relative z-10">
                     <div className="flex justify-between items-center border-b border-slate-700 pb-2">
                         <span className="text-slate-400 text-sm">水泵状态</span>
                         <span className={`font-mono font-bold ${status.pump_state === 'on' ? 'text-green-400' : 'text-slate-200'}`}>

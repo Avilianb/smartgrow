@@ -231,41 +231,42 @@ export const LocationManager: React.FC = () => {
   const coords = getCoords();
 
   return (
-    <div className="p-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 animate-[fadeIn_0.5s_ease-out]">
       <header>
-        <h1 className="text-2xl font-bold text-slate-800">位置与天气</h1>
-        <p className="text-slate-500">管理设备位置以获取准确天气数据</p>
+        <h1 className="text-xl md:text-2xl font-bold text-slate-800">位置与天气</h1>
+        <p className="text-sm md:text-base text-slate-500">管理设备位置以获取准确天气数据</p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Map Card */}
-        <div className="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col min-h-[600px]">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-              <MapIcon size={20} className="text-primary-500"/>
+        <div className="lg:col-span-2 bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 flex flex-col min-h-[600px]">
+          <div className="flex justify-between items-center mb-4 md:mb-6">
+            <h2 className="text-base md:text-lg font-bold text-slate-800 flex items-center gap-2">
+              <MapIcon size={18} className="md:w-5 md:h-5 text-primary-500"/>
               设备位置
             </h2>
             <button
               onClick={handleCurrentLocation}
               disabled={isLocating}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors
+              className={`flex items-center gap-1.5 md:gap-2 px-2.5 md:px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition-colors
                 ${isLocating
                   ? 'bg-slate-100 text-slate-400 cursor-wait'
                   : 'bg-primary-50 text-primary-700 hover:bg-primary-100'
                 }`}
             >
-              {isLocating ? <Loader2 size={16} className="animate-spin" /> : <Locate size={16} />}
-              {isLocating ? '正在定位...' : '使用当前精确位置'}
+              {isLocating ? <Loader2 size={14} className="md:w-4 md:h-4 animate-spin" /> : <Locate size={14} className="md:w-4 md:h-4" />}
+              <span className="hidden sm:inline">{isLocating ? '正在定位...' : '使用当前精确位置'}</span>
+              <span className="sm:hidden">{isLocating ? '定位中' : '定位'}</span>
             </button>
           </div>
 
-          <div className="h-[480px] rounded-2xl overflow-hidden relative border border-slate-200 shadow-inner z-0">
+          <div className="h-[400px] md:h-[480px] rounded-2xl overflow-hidden relative border border-slate-200 shadow-inner z-0">
              {/* Map Container */}
              <MapContainer
                 center={[coords.lat, coords.lng]}
                 zoom={10}
                 scrollWheelZoom={true}
-                style={{ height: "100%", width: "100%", minHeight: "480px" }}
+                style={{ height: "100%", width: "100%", minHeight: "400px" }}
              >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -313,7 +314,7 @@ export const LocationManager: React.FC = () => {
             </div>
           )}
 
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
              <div>
                 <label className="block text-xs font-semibold text-slate-500 mb-1">纬度 (Latitude)</label>
                 <input
@@ -321,7 +322,7 @@ export const LocationManager: React.FC = () => {
                     step="0.0001"
                     value={lat}
                     onChange={e => setLat(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono text-sm"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 md:px-4 py-2 md:py-2 text-sm md:text-base text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono"
                 />
              </div>
              <div>
@@ -331,55 +332,55 @@ export const LocationManager: React.FC = () => {
                     step="0.0001"
                     value={lng}
                     onChange={e => setLng(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono text-sm"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 md:px-4 py-2 md:py-2 text-sm md:text-base text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all font-mono"
                 />
              </div>
              <div className="flex items-end">
                 <button
                   onClick={handleSaveLocation}
                   disabled={isSaving}
-                  className={`w-full font-semibold py-2 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg
+                  className={`w-full font-semibold py-2 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-95
                     ${isSaving
                       ? 'bg-slate-400 text-white cursor-wait'
                       : 'bg-primary-600 hover:bg-primary-700 text-white shadow-primary-500/30'
                     }`}
                 >
-                    {isSaving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-                    {isSaving ? '保存中...' : '保存坐标'}
+                    {isSaving ? <Loader2 size={16} className="md:w-[18px] md:h-[18px] animate-spin" /> : <Save size={16} className="md:w-[18px] md:h-[18px]" />}
+                    <span className="text-sm md:text-base">{isSaving ? '保存中...' : '保存坐标'}</span>
                 </button>
              </div>
           </div>
         </div>
 
         {/* Forecast Card */}
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 h-fit">
-            <h2 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
-                <Cloud size={20} className="text-blue-500"/>
+        <div className="bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 shadow-sm border border-slate-100 h-fit">
+            <h2 className="text-base md:text-lg font-bold text-slate-800 mb-4 md:mb-6 flex items-center gap-2">
+                <Cloud size={18} className="md:w-5 md:h-5 text-blue-500"/>
                 未来5天预报
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
                 {forecast.map((day, idx) => (
-                    <div key={idx} className="group flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 cursor-default">
-                        <div className="flex items-center gap-4">
-                            <div className="w-12 text-sm font-bold text-slate-400">{day.date}</div>
+                    <div key={idx} className="group flex items-center justify-between p-2.5 md:p-3 rounded-xl md:rounded-2xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-100 cursor-default">
+                        <div className="flex items-center gap-3 md:gap-4">
+                            <div className="w-10 md:w-12 text-xs md:text-sm font-bold text-slate-400">{day.date}</div>
                             <div className="flex flex-col">
-                                <span className="font-semibold text-slate-700 text-sm">{day.condition}</span>
-                                <div className="flex items-center gap-1 text-xs text-slate-400">
+                                <span className="font-semibold text-slate-700 text-xs md:text-sm">{day.condition}</span>
+                                <div className="flex items-center gap-1 text-[10px] md:text-xs text-slate-400">
                                     <Droplets size={10} />
                                     {day.precip_mm.toFixed(1)}mm
                                 </div>
                             </div>
                         </div>
                         <div className="text-right">
-                            <span className="block font-bold text-slate-800">{day.temp_max.toFixed(0)}°</span>
-                            <span className="block text-xs text-slate-400">{day.temp_min.toFixed(0)}°</span>
+                            <span className="block font-bold text-slate-800 text-sm md:text-base">{day.temp_max.toFixed(0)}°</span>
+                            <span className="block text-[10px] md:text-xs text-slate-400">{day.temp_min.toFixed(0)}°</span>
                         </div>
                     </div>
                 ))}
             </div>
-            <div className="mt-6 pt-6 border-t border-slate-100">
-                <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
-                    <p className="text-xs text-blue-700 font-medium leading-relaxed">
+            <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-slate-100">
+                <div className="bg-blue-50 rounded-xl p-3 md:p-4 border border-blue-100">
+                    <p className="text-[11px] md:text-xs text-blue-700 font-medium leading-relaxed">
                         <span className="font-bold block mb-1">AI 建议</span>
                         根据该地区的天气预报，预计周三有大雨。系统将跳过预定的灌溉计划以节约用水。
                     </p>

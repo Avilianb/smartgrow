@@ -2,6 +2,7 @@ import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Sidebar } from './components/Sidebar';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { Dashboard } from './pages/Dashboard';
 import { LocationManager } from './pages/LocationManager';
 import { SystemLogs } from './pages/SystemLogs';
@@ -40,11 +41,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="flex min-h-screen bg-[#F8FAFC]">
       <Sidebar />
-      <main className="flex-1 pt-16 md:pt-0 md:ml-64 transition-all duration-300">
+      <main className="flex-1 pt-16 pb-16 md:pt-0 md:pb-0 md:ml-64 transition-all duration-300">
         <div className="max-w-7xl mx-auto">
           {children}
         </div>
       </main>
+      {/* 移动端底部导航栏 */}
+      <MobileBottomNav />
     </div>
   );
 };
