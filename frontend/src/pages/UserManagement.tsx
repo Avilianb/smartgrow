@@ -34,10 +34,11 @@ export const UserManagement: React.FC = () => {
 
       // 添加缓存绕过参数和headers
       const url = bypassCache
-        ? `/api/admin/users?_t=${Date.now()}`
+        ? `/api/admin/users?_t=${Date.now()}&_nocache=1`
         : '/api/admin/users';
 
       const response = await fetch(url, {
+        method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
           // 添加禁用缓存的headers
@@ -45,10 +46,13 @@ export const UserManagement: React.FC = () => {
           'Pragma': 'no-cache',
           'Expires': '0',
         },
+        // 添加cache选项确保不使用浏览器缓存
+        cache: 'no-store',
       });
 
       const data = await response.json();
       console.log('Load users response:', data);
+      console.log('Users count:', data.users?.length || 0);
 
       if (data.success) {
         setUsers(data.users || []);
@@ -89,21 +93,28 @@ export const UserManagement: React.FC = () => {
 
       const data = await response.json();
       console.log('Add user response:', data);
+      console.log('Returned user data:', data.user);
 
-      if (data.success) {
-        // 添加用户成功后，立即更新本地状态（乐观更新）
+      if (data.success && data.user) {
+        // 使用服务器返回的完整用户数据
         const newUserData: UserWithDevice = {
-          id: data.user?.id || Date.now(), // 使用返回的ID或临时ID
-          username: newUser.username,
-          role: 'user',
-          device_id: newUser.device_id,
-          device_name: newUser.device_name,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          id: data.user.id,
+          username: data.user.username,
+          role: data.user.role || 'user',
+          device_id: data.user.device_id,
+          device_name: data.user.device_name,
+          created_at: data.user.created_at,
+          updated_at: data.user.updated_at,
         };
 
+        console.log('Adding user to local state:', newUserData);
+
         // 立即添加到本地列表
-        setUsers(prevUsers => [...prevUsers, newUserData]);
+        setUsers(prevUsers => {
+          const updated = [...prevUsers, newUserData];
+          console.log('Updated users list:', updated);
+          return updated;
+        });
 
         // 显示成功消息
         setSuccessMessage(`用户 "${newUser.username}" 添加成功！`);
@@ -118,6 +129,7 @@ export const UserManagement: React.FC = () => {
         setTimeout(() => loadUsers(true), 500);
       } else {
         setError(data.message || '添加用户失败');
+        console.error('Add user failed:', data);
       }
     } catch (err) {
       console.error('Add user error:', err);
