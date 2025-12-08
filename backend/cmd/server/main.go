@@ -108,9 +108,14 @@ func main() {
 		c.Writer.Header().Set("X-Frame-Options", "DENY")
 		c.Writer.Header().Set("X-XSS-Protection", "1; mode=block")
 		c.Writer.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
-		// CSP header
+		// CSP header - 允许地图和字体等外部资源
 		c.Writer.Header().Set("Content-Security-Policy",
-			"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'")
+			"default-src 'self'; "+
+				"script-src 'self'; "+
+				"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; "+
+				"img-src 'self' data: https:; "+
+				"font-src 'self' https://fonts.gstatic.com; "+
+				"connect-src 'self'")
 		c.Next()
 	})
 
