@@ -28,12 +28,22 @@ export const UserManagement: React.FC = () => {
   });
 
   // 加载用户列表
-  const loadUsers = async () => {
+  const loadUsers = async (bypassCache = false) => {
     try {
-      console.log('Loading users with token:', token ? 'exists' : 'missing');
-      const response = await fetch('/api/admin/users', {
+      console.log('Loading users with token:', token ? 'exists' : 'missing', bypassCache ? '(bypassing cache)' : '');
+
+      // 添加缓存绕过参数和headers
+      const url = bypassCache
+        ? `/api/admin/users?_t=${Date.now()}`
+        : '/api/admin/users';
+
+      const response = await fetch(url, {
         headers: {
           'Authorization': `Bearer ${token}`,
+          // 添加禁用缓存的headers
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
         },
       });
 
@@ -81,15 +91,31 @@ export const UserManagement: React.FC = () => {
       console.log('Add user response:', data);
 
       if (data.success) {
-        // 刷新列表
-        console.log('User added successfully, reloading user list...');
-        await loadUsers();
+        // 添加用户成功后，立即更新本地状态（乐观更新）
+        const newUserData: UserWithDevice = {
+          id: data.user?.id || Date.now(), // 使用返回的ID或临时ID
+          username: newUser.username,
+          role: 'user',
+          device_id: newUser.device_id,
+          device_name: newUser.device_name,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        // 立即添加到本地列表
+        setUsers(prevUsers => [...prevUsers, newUserData]);
+
         // 显示成功消息
         setSuccessMessage(`用户 "${newUser.username}" 添加成功！`);
         setTimeout(() => setSuccessMessage(''), 3000);
+
         // 关闭模态框并重置表单
         setShowAddModal(false);
         setNewUser({ username: '', password: '', device_id: '', device_name: '' });
+
+        // 后台刷新列表（绕过缓存）以确保数据准确
+        console.log('User added successfully, refreshing user list in background...');
+        setTimeout(() => loadUsers(true), 500);
       } else {
         setError(data.message || '添加用户失败');
       }
@@ -115,8 +141,15 @@ export const UserManagement: React.FC = () => {
 
       const data = await response.json();
       if (data.success) {
-        // 刷新列表
-        await loadUsers();
+        // 立即从本地列表移除（乐观更新）
+        setUsers(prevUsers => prevUsers.filter(u => u.id !== userId));
+
+        // 显示成功消息
+        setSuccessMessage('用户删除成功！');
+        setTimeout(() => setSuccessMessage(''), 3000);
+
+        // 后台刷新列表（绕过缓存）以确保数据准确
+        setTimeout(() => loadUsers(true), 500);
       } else {
         alert(data.message || '删除用户失败');
       }
@@ -146,7 +179,7 @@ export const UserManagement: React.FC = () => {
           <button
             onClick={() => {
               setLoading(true);
-              loadUsers();
+              loadUsers(true); // 强制绕过缓存刷新
             }}
             className="bg-gray-100 text-gray-700 px-3 md:px-4 py-2 rounded-lg hover:bg-gray-200 transition flex items-center gap-1.5 md:gap-2 text-sm md:text-base"
           >
