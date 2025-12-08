@@ -233,13 +233,13 @@ export const LocationManager: React.FC = () => {
             </button>
           </div>
 
-          <div className="flex-1 rounded-2xl overflow-hidden relative border border-slate-200 shadow-inner z-0">
+          <div className="h-[480px] rounded-2xl overflow-hidden relative border border-slate-200 shadow-inner z-0">
              {/* Map Container */}
              <MapContainer
                 center={[coords.lat, coords.lng]}
                 zoom={10}
                 scrollWheelZoom={true}
-                style={{ height: "100%", width: "100%" }}
+                style={{ height: "100%", width: "100%", minHeight: "480px" }}
              >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
