@@ -33,13 +33,24 @@ const RecenterMap = ({ lat, lng }: { lat: number; lng: number }) => {
 };
 
 export const LocationManager: React.FC = () => {
-  const [lat, setLat] = useState<string>("39.92");
-  const [lng, setLng] = useState<string>("116.41");
+  // 从localStorage读取上次保存的位置或使用默认值
+  const [lat, setLat] = useState<string>(() => {
+    const saved = localStorage.getItem('saved_latitude');
+    return saved || "39.92";
+  });
+  const [lng, setLng] = useState<string>(() => {
+    const saved = localStorage.getItem('saved_longitude');
+    return saved || "116.41";
+  });
   const [address, setAddress] = useState<string>("加载中...");
   const [isLocating, setIsLocating] = useState(false);
   const [forecast, setForecast] = useState<WeatherForecast[]>([]);
   const [isSaving, setIsSaving] = useState(false);
-  const [isFirstTime, setIsFirstTime] = useState(false); // 是否首次使用
+  // 从localStorage读取是否首次使用（null表示还不知道，等API返回）
+  const [isFirstTime, setIsFirstTime] = useState<boolean>(() => {
+    const hasLocation = localStorage.getItem('has_saved_location');
+    return hasLocation !== 'true';
+  });
 
   // 初始加载位置和天气数据
   useEffect(() => {
@@ -47,14 +58,21 @@ export const LocationManager: React.FC = () => {
       // 加载位置
       const location = await getLocation();
       if (location) {
-        setLat(location.latitude.toFixed(4));
-        setLng(location.longitude.toFixed(4));
+        const newLat = location.latitude.toFixed(4);
+        const newLng = location.longitude.toFixed(4);
+        setLat(newLat);
+        setLng(newLng);
         setAddress(getRegionName(location.latitude, location.longitude));
         setIsFirstTime(false);
+        // 保存到localStorage
+        localStorage.setItem('saved_latitude', newLat);
+        localStorage.setItem('saved_longitude', newLng);
+        localStorage.setItem('has_saved_location', 'true');
       } else {
         // 首次使用，没有保存过位置
         setAddress("中国, 北京 (默认)");
         setIsFirstTime(true);
+        localStorage.setItem('has_saved_location', 'false');
       }
 
       // 加载天气预报
@@ -184,6 +202,10 @@ export const LocationManager: React.FC = () => {
       const success = await updateLocation(latitude, longitude);
       if (success) {
         setIsFirstTime(false); // 保存成功后不再是首次
+        // 保存到localStorage
+        localStorage.setItem('saved_latitude', lat);
+        localStorage.setItem('saved_longitude', lng);
+        localStorage.setItem('has_saved_location', 'true');
         alert("✅ 位置已保存！正在获取最新天气预报...");
         // 重新获取天气预报
         const weatherData = await getForecast();
