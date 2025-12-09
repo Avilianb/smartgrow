@@ -28,4 +28,52 @@ export default defineConfig({
       }
     }
   },
+  build: {
+    // 代码分割优化
+    rollupOptions: {
+      output: {
+        // 手动分割代码块
+        manualChunks: {
+          // React核心库单独打包
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // 图表库单独打包（较大）
+          'charts': ['recharts'],
+          // 地图库单独打包（较大）
+          'maps': ['leaflet', 'react-leaflet'],
+          // 图标库单独打包
+          'icons': ['lucide-react'],
+          // 工具库
+          'utils': ['axios', 'date-fns'],
+        },
+        // 优化chunk文件名
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
+      }
+    },
+    // 提高chunk大小警告阈值
+    chunkSizeWarningLimit: 600,
+    // 启用CSS代码分割
+    cssCodeSplit: true,
+    // sourcemap在生产环境禁用以减小体积
+    sourcemap: false,
+    // 使用esbuild压缩（更快，效果也好）
+    minify: 'esbuild',
+    // 目标浏览器
+    target: 'es2015',
+  },
+  // 性能优化
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'recharts',
+      'leaflet',
+      'react-leaflet',
+      'lucide-react',
+      'axios',
+      'date-fns',
+    ],
+  },
 })

@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Sidebar } from './components/Sidebar';
 import { MobileBottomNav } from './components/MobileBottomNav';
-import { Dashboard } from './pages/Dashboard';
-import { LocationManager } from './pages/LocationManager';
-import { SystemLogs } from './pages/SystemLogs';
-import { Login } from './pages/Login';
-import { UserManagement } from './pages/UserManagement';
-import { ChangePassword } from './pages/ChangePassword';
+
+// 懒加载页面组件 - 只在需要时才加载
+const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const LocationManager = lazy(() => import('./pages/LocationManager').then(m => ({ default: m.LocationManager })));
+const SystemLogs = lazy(() => import('./pages/SystemLogs').then(m => ({ default: m.SystemLogs })));
+const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
+const UserManagement = lazy(() => import('./pages/UserManagement').then(m => ({ default: m.UserManagement })));
+const ChangePassword = lazy(() => import('./pages/ChangePassword').then(m => ({ default: m.ChangePassword })));
+
+// 加载中组件
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center h-screen">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-sm text-slate-500">加载中...</p>
+    </div>
+  </div>
+);
 
 // 受保护的路由组件
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({
@@ -57,11 +69,7 @@ const AppRoutes: React.FC = () => {
 
   // 等待认证状态加载完成
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-gray-600">加载中...</div>
-      </div>
-    );
+    return <LoadingFallback />;
   }
 
   return (
@@ -69,7 +77,15 @@ const AppRoutes: React.FC = () => {
       {/* 登录页面 */}
       <Route
         path="/login"
-        element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
+        element={
+          isAuthenticated ? (
+            <Navigate to="/" replace />
+          ) : (
+            <Suspense fallback={<LoadingFallback />}>
+              <Login />
+            </Suspense>
+          )
+        }
       />
 
       {/* 需要认证的路由 */}
@@ -78,7 +94,9 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <Layout>
-              <Dashboard />
+              <Suspense fallback={<LoadingFallback />}>
+                <Dashboard />
+              </Suspense>
             </Layout>
           </ProtectedRoute>
         }
@@ -88,7 +106,9 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <Layout>
-              <LocationManager />
+              <Suspense fallback={<LoadingFallback />}>
+                <LocationManager />
+              </Suspense>
             </Layout>
           </ProtectedRoute>
         }
@@ -98,7 +118,9 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <Layout>
-              <SystemLogs />
+              <Suspense fallback={<LoadingFallback />}>
+                <SystemLogs />
+              </Suspense>
             </Layout>
           </ProtectedRoute>
         }
@@ -110,7 +132,9 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute adminOnly>
             <Layout>
-              <UserManagement />
+              <Suspense fallback={<LoadingFallback />}>
+                <UserManagement />
+              </Suspense>
             </Layout>
           </ProtectedRoute>
         }
@@ -122,7 +146,9 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute>
             <Layout>
-              <ChangePassword />
+              <Suspense fallback={<LoadingFallback />}>
+                <ChangePassword />
+              </Suspense>
             </Layout>
           </ProtectedRoute>
         }
