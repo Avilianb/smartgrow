@@ -102,7 +102,7 @@ SmartGrow 是一个完整的物联网智能灌溉解决方案，通过ESP32设�
 #### 1. 克隆项目
 
 ```bash
-git clone https://github.com/你的用户名/smartgrow.git
+git clone https://github.com/Avilianb/smartgrow.git
 cd smartgrow
 ```
 
