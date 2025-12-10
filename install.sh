@@ -57,10 +57,10 @@ ask_china_mirror() {
     echo -e "${YELLOW}========================================${NC}"
     echo ""
     echo "国内镜像加速将使用："
-    echo "  • Go下载: 清华大学镜像"
+    echo "  • Go下载: 阿里云/腾讯云镜像（自动选择）"
     echo "  • npm安装: 阿里云镜像 npmmirror.com"
     echo "  • Go模块: 阿里云代理 mirrors.aliyun.com"
-    echo "  • GitHub: ghproxy.com 加速"
+    echo "  • GitHub: Gitee优先，自动回退ghproxy"
     echo ""
     read -p "是否启用国内镜像源？[Y/n] " -r
     echo ""
@@ -143,8 +143,23 @@ install_golang() {
 
         # 根据镜像设置选择下载源
         if [ "$USE_CHINA_MIRROR" = "true" ]; then
-            GO_URL="https://mirrors.tuna.tsinghua.edu.cn/golang/$GO_FILE"
-            log_info "使用清华大学镜像: mirrors.tuna.tsinghua.edu.cn"
+            # 国内镜像：依次尝试多个源
+            log_info "准备从国内镜像下载Go..."
+
+            # 尝试1: 阿里云镜像
+            GO_URL="https://mirrors.aliyun.com/golang/$GO_FILE"
+            log_info "尝试阿里云镜像: mirrors.aliyun.com"
+            if wget --spider --timeout=10 "$GO_URL" 2>/dev/null; then
+                log_info "✓ 阿里云镜像可用"
+            # 尝试2: 腾讯云镜像
+            elif GO_URL="https://mirrors.cloud.tencent.com/golang/$GO_FILE" && \
+                 wget --spider --timeout=10 "$GO_URL" 2>/dev/null; then
+                log_info "切换到腾讯云镜像: mirrors.cloud.tencent.com"
+            # 尝试3: 官方源
+            else
+                GO_URL="https://go.dev/dl/$GO_FILE"
+                log_warning "国内镜像不可用，使用官方源"
+            fi
         else
             GO_URL="https://go.dev/dl/$GO_FILE"
         fi

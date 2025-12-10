@@ -47,7 +47,7 @@ USE_CHINA_MIRROR=true sudo bash install.sh
 **国内镜像优化：**
 - 🚀 自动询问是否启用国内镜像加速
 - 📦 代码克隆：优先使用Gitee（最稳定），自动回退ghproxy/GitHub
-- 🌐 Go下载：使用清华大学镜像 mirrors.tuna.tsinghua.edu.cn
+- 🌐 Go下载：阿里云/腾讯云镜像（自动选择最快的）
 - 📦 npm安装：使用阿里云镜像 npmmirror.com
 - 🔧 Go模块：配置阿里云代理 mirrors.aliyun.com/goproxy
 
