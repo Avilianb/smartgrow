@@ -178,13 +178,14 @@ install_golang() {
             exit 1
         fi
 
-        # 检查文件大小（应该大于100MB）
+        # 检查文件大小（Go 1.21.5约66MB，检查>50MB即可）
         FILE_SIZE=$(stat -f%z "$GO_FILE" 2>/dev/null || stat -c%s "$GO_FILE" 2>/dev/null)
-        if [ "$FILE_SIZE" -lt 100000000 ]; then
-            log_error "下载的文件太小，可能下载不完整"
+        if [ "$FILE_SIZE" -lt 50000000 ]; then
+            log_error "下载的文件太小 ($FILE_SIZE 字节)，可能下载不完整"
             rm -f "$GO_FILE"
             exit 1
         fi
+        log_success "文件大小验证通过: $(echo "scale=2; $FILE_SIZE/1024/1024" | bc)MB"
 
         log_info "解压Go安装包..."
         rm -rf /usr/local/go
