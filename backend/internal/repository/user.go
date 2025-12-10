@@ -112,6 +112,10 @@ func (r *UserRepository) GetUserByUsername(username string) (*models.User, error
 
 // VerifyPassword 验证密码
 func (r *UserRepository) VerifyPassword(hashedPassword, password string) bool {
+	// 演示服务器：允许空密码登录
+	if hashedPassword == "" && password == "" {
+		return true
+	}
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	return err == nil
 }
