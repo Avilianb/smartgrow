@@ -33,7 +33,7 @@ sudo bash install.sh
 ```
 
 **安装脚本会自动完成：**
-- ✅ 安装Node.js 18.x和Go 1.21
+- ✅ 安装Node.js 20.x LTS和Go 1.21
 - ✅ 克隆项目代码
 - ✅ 安装前后端依赖
 - ✅ 构建前后端代码

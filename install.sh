@@ -83,8 +83,8 @@ install_nodejs() {
         NODE_VERSION=$(node -v)
         log_success "Node.js已安装: $NODE_VERSION"
     else
-        log_info "安装Node.js 18.x..."
-        curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+        log_info "安装Node.js 20.x LTS..."
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
         apt-get install -y nodejs
         log_success "Node.js安装完成: $(node -v)"
     fi
