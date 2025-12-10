@@ -393,7 +393,21 @@ show_completion() {
     echo ""
     log_info "服务状态: $(systemctl is-active smartgrow)"
     log_info "项目目录: $PROJECT_DIR"
-    log_info "访问地址: http://$(hostname -I | awk '{print $1}'):8080"
+
+    # 尝试获取公网IP，如果失败则使用本地IP
+    PUBLIC_IP=$(curl -s --max-time 5 ifconfig.me 2>/dev/null || curl -s --max-time 5 ip.sb 2>/dev/null || echo "")
+    LOCAL_IP=$(hostname -I | awk '{print $1}')
+
+    if [ -n "$PUBLIC_IP" ]; then
+        log_info "访问地址: http://$PUBLIC_IP:8080"
+        if [ "$PUBLIC_IP" != "$LOCAL_IP" ]; then
+            log_info "内网地址: http://$LOCAL_IP:8080"
+        fi
+    else
+        log_info "访问地址: http://$LOCAL_IP:8080"
+        log_warning "如果这是云服务器，请使用公网IP访问"
+    fi
+
     echo ""
     log_info "默认管理员账户:"
     log_info "  用户名: admin"
