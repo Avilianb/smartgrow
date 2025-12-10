@@ -103,10 +103,23 @@ install_golang() {
     else
         log_info "安装Go 1.21..."
         GO_VERSION="1.21.5"
-        wget -q https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz
+        GO_FILE="go${GO_VERSION}.linux-amd64.tar.gz"
+
+        # 显示下载进度，设置超时为10分钟
+        log_info "下载 $GO_FILE (约140MB，请耐心等待)..."
+        if ! wget --progress=bar:force --timeout=600 https://go.dev/dl/$GO_FILE 2>&1 | \
+            grep --line-buffered "%" | \
+            sed -u -e "s,\.,,g" | \
+            awk '{printf("\r[下载进度] %s", $0)}'; then
+            log_error "下载失败，请检查网络连接"
+            exit 1
+        fi
+        echo ""  # 换行
+
+        log_info "解压Go安装包..."
         rm -rf /usr/local/go
-        tar -C /usr/local -xzf go${GO_VERSION}.linux-amd64.tar.gz
-        rm go${GO_VERSION}.linux-amd64.tar.gz
+        tar -C /usr/local -xzf $GO_FILE
+        rm $GO_FILE
 
         # 添加到PATH
         if ! grep -q "/usr/local/go/bin" /etc/profile; then
