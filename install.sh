@@ -285,6 +285,11 @@ install_frontend() {
     log_info "构建前端..."
     npm run build
     log_success "前端构建完成"
+
+    # 复制前端构建文件到backend目录（后端服务需要）
+    log_info "复制前端文件到backend目录..."
+    cp -r "$PROJECT_DIR/frontend/dist" "$PROJECT_DIR/backend/dist"
+    log_success "前端文件复制完成"
 }
 
 # 安装后端依赖
