@@ -9,9 +9,6 @@
 
 set -e  # 遇到错误立即退出
 
-# 配置选项：是否使用国内镜像（中国大陆服务器请设置为 true）
-USE_CHINA_MIRROR=${USE_CHINA_MIRROR:-false}
-
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
