@@ -203,19 +203,35 @@ clone_project() {
 
     # 根据镜像设置选择下载源
     if [ "$USE_CHINA_MIRROR" = "true" ]; then
-        GIT_URL="https://mirror.ghproxy.com/https://github.com/Avilianb/smartgrow.git"
-        log_info "使用GitHub国内镜像加速..."
-    else
-        GIT_URL="https://github.com/Avilianb/smartgrow.git"
-    fi
+        # 国内镜像模式：依次尝试 Gitee -> ghproxy -> GitHub
+        log_info "克隆项目到 $PROJECT_DIR..."
 
-    log_info "克隆项目到 $PROJECT_DIR..."
-    if ! git clone "$GIT_URL" "$PROJECT_DIR"; then
-        log_error "克隆失败"
-        if [ "$USE_CHINA_MIRROR" = "true" ]; then
-            log_warning "尝试使用原始GitHub地址..."
-            git clone https://github.com/Avilianb/smartgrow.git "$PROJECT_DIR"
+        # 尝试1: Gitee（最稳定）
+        log_info "尝试从Gitee克隆（国内最稳定）..."
+        if git clone https://gitee.com/avilianb/smartgrow.git "$PROJECT_DIR" 2>/dev/null; then
+            log_success "✓ 从Gitee克隆成功"
+        # 尝试2: ghproxy GitHub代理
+        elif { log_info "尝试GitHub代理 ghproxy.com..."; git clone https://mirror.ghproxy.com/https://github.com/Avilianb/smartgrow.git "$PROJECT_DIR" 2>/dev/null; }; then
+            log_success "✓ 从ghproxy克隆成功"
+        # 尝试3: 直接GitHub
+        elif { log_info "尝试直接连接GitHub..."; git clone https://github.com/Avilianb/smartgrow.git "$PROJECT_DIR" 2>/dev/null; }; then
+            log_success "✓ 从GitHub克隆成功"
         else
+            log_error "所有克隆方式均失败"
+            echo ""
+            echo "请手动下载代码到 $PROJECT_DIR："
+            echo "1. Gitee: https://gitee.com/avilianb/smartgrow"
+            echo "2. GitHub: https://github.com/Avilianb/smartgrow"
+            echo ""
+            echo "或使用scp上传代码："
+            echo "  scp -r /本地路径/smartgrow root@服务器IP:$PROJECT_DIR"
+            exit 1
+        fi
+    else
+        # 国外模式：直接使用GitHub
+        log_info "克隆项目到 $PROJECT_DIR..."
+        if ! git clone https://github.com/Avilianb/smartgrow.git "$PROJECT_DIR"; then
+            log_error "克隆失败，请检查网络连接"
             exit 1
         fi
     fi
