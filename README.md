@@ -30,6 +30,10 @@ chmod +x install.sh
 
 # 3. 运行安装（需要root权限）
 sudo bash install.sh
+
+# 国内服务器推荐：启用国内镜像加速
+# 运行时会自动询问是否使用国内镜像，或者手动指定：
+# USE_CHINA_MIRROR=true sudo bash install.sh
 ```
 
 **安装脚本会自动完成：**
@@ -40,6 +44,13 @@ sudo bash install.sh
 - ✅ 配置数据库
 - ✅ 创建systemd服务
 - ✅ 启动SmartGrow服务
+
+**国内服务器优化：**
+- 🚀 自动询问是否启用国内镜像加速
+- 🌐 Go下载：使用 golang.google.cn
+- 📦 npm安装：使用淘宝镜像 npmmirror.com
+- 🔧 Go模块：配置 goproxy.cn 代理
+- 💾 GitHub：使用 ghproxy.com 加速克隆
 
 **安装完成后：**
 - 访问地址：`http://你的服务器IP:8080`

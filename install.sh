@@ -9,6 +9,9 @@
 
 set -e  # 遇到错误立即退出
 
+# 配置选项：是否使用国内镜像（中国大陆服务器请设置为 true）
+USE_CHINA_MIRROR=${USE_CHINA_MIRROR:-false}
+
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -38,6 +41,18 @@ show_banner() {
     echo "======================================"
     echo "  SmartGrow 智能灌溉系统安装程序"
     echo "======================================"
+    echo ""
+
+    # 询问是否使用国内镜像
+    if [ "$USE_CHINA_MIRROR" != "true" ]; then
+        echo -e "${YELLOW}检测到您可能在使用国内服务器${NC}"
+        read -p "是否使用国内镜像源加速下载？(Y/n) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+            USE_CHINA_MIRROR=true
+            log_success "已启用国内镜像加速"
+        fi
+    fi
     echo ""
 }
 
@@ -105,9 +120,17 @@ install_golang() {
         GO_VERSION="1.21.5"
         GO_FILE="go${GO_VERSION}.linux-amd64.tar.gz"
 
+        # 根据镜像设置选择下载源
+        if [ "$USE_CHINA_MIRROR" = "true" ]; then
+            GO_URL="https://golang.google.cn/dl/$GO_FILE"
+            log_info "使用国内镜像: golang.google.cn"
+        else
+            GO_URL="https://go.dev/dl/$GO_FILE"
+        fi
+
         # 显示下载进度，设置超时为10分钟
         log_info "下载 $GO_FILE (约140MB，请耐心等待)..."
-        if ! wget --progress=bar:force --timeout=600 https://go.dev/dl/$GO_FILE 2>&1 | \
+        if ! wget --progress=bar:force --timeout=600 "$GO_URL" 2>&1 | \
             grep --line-buffered "%" | \
             sed -u -e "s,\.,,g" | \
             awk '{printf("\r[下载进度] %s", $0)}'; then
@@ -126,6 +149,13 @@ install_golang() {
             echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile
         fi
         export PATH=$PATH:/usr/local/go/bin
+
+        # 配置Go模块代理（国内镜像）
+        if [ "$USE_CHINA_MIRROR" = "true" ]; then
+            export GOPROXY=https://goproxy.cn,direct
+            echo 'export GOPROXY=https://goproxy.cn,direct' >> /etc/profile
+            log_info "已配置Go模块代理: goproxy.cn"
+        fi
 
         log_success "Go安装完成: $(go version)"
     fi
@@ -147,8 +177,25 @@ clone_project() {
         fi
     fi
 
+    # 根据镜像设置选择下载源
+    if [ "$USE_CHINA_MIRROR" = "true" ]; then
+        GIT_URL="https://mirror.ghproxy.com/https://github.com/Avilianb/smartgrow.git"
+        log_info "使用GitHub国内镜像加速..."
+    else
+        GIT_URL="https://github.com/Avilianb/smartgrow.git"
+    fi
+
     log_info "克隆项目到 $PROJECT_DIR..."
-    git clone https://github.com/Avilianb/smartgrow.git "$PROJECT_DIR"
+    if ! git clone "$GIT_URL" "$PROJECT_DIR"; then
+        log_error "克隆失败"
+        if [ "$USE_CHINA_MIRROR" = "true" ]; then
+            log_warning "尝试使用原始GitHub地址..."
+            git clone https://github.com/Avilianb/smartgrow.git "$PROJECT_DIR"
+        else
+            exit 1
+        fi
+    fi
+
     cd "$PROJECT_DIR"
     log_success "项目克隆完成"
 }
@@ -157,6 +204,13 @@ clone_project() {
 install_frontend() {
     log_info "安装前端依赖..."
     cd "$PROJECT_DIR/frontend"
+
+    # 配置npm镜像（国内加速）
+    if [ "$USE_CHINA_MIRROR" = "true" ]; then
+        npm config set registry https://registry.npmmirror.com
+        log_info "已配置npm淘宝镜像: registry.npmmirror.com"
+    fi
+
     npm install --silent
     log_success "前端依赖安装完成"
 
