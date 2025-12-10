@@ -208,7 +208,7 @@ clone_project() {
 
         # 尝试1: Gitee（最稳定）
         log_info "尝试从Gitee克隆（国内最稳定）..."
-        if git clone https://gitee.com/avilianb/smartgrow.git "$PROJECT_DIR" 2>/dev/null; then
+        if git clone https://gitee.com/jakoale/smartgrow.git "$PROJECT_DIR" 2>/dev/null; then
             log_success "✓ 从Gitee克隆成功"
         # 尝试2: ghproxy GitHub代理
         elif { log_info "尝试GitHub代理 ghproxy.com..."; git clone https://mirror.ghproxy.com/https://github.com/Avilianb/smartgrow.git "$PROJECT_DIR" 2>/dev/null; }; then
@@ -220,7 +220,7 @@ clone_project() {
             log_error "所有克隆方式均失败"
             echo ""
             echo "请手动下载代码到 $PROJECT_DIR："
-            echo "1. Gitee: https://gitee.com/avilianb/smartgrow"
+            echo "1. Gitee: https://gitee.com/jakoale/smartgrow"
             echo "2. GitHub: https://github.com/Avilianb/smartgrow"
             echo ""
             echo "或使用scp上传代码："

@@ -25,7 +25,7 @@
 
 ```bash
 # 1. 从Gitee下载安装脚本（国内访问更快）
-wget https://gitee.com/avilianb/smartgrow/raw/main/install.sh
+wget https://gitee.com/jakoale/smartgrow/raw/main/install.sh
 
 # 2. 添加执行权限
 chmod +x install.sh
@@ -68,7 +68,7 @@ sudo bash install.sh
 
 **代码仓库：**
 - GitHub（国外）: https://github.com/Avilianb/smartgrow
-- Gitee（国内）: https://gitee.com/avilianb/smartgrow
+- Gitee（国内）: https://gitee.com/jakoale/smartgrow
 
 **安装完成后：**
 - 访问地址：`http://你的服务器IP:8080`
