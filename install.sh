@@ -60,7 +60,7 @@ ask_china_mirror() {
     echo -e "${YELLOW}========================================${NC}"
     echo ""
     echo "国内镜像加速将使用："
-    echo "  • Go下载: 阿里云镜像"
+    echo "  • Go下载: 清华大学镜像"
     echo "  • npm安装: 阿里云镜像 npmmirror.com"
     echo "  • Go模块: 阿里云代理 mirrors.aliyun.com"
     echo "  • GitHub: ghproxy.com 加速"
@@ -146,8 +146,8 @@ install_golang() {
 
         # 根据镜像设置选择下载源
         if [ "$USE_CHINA_MIRROR" = "true" ]; then
-            GO_URL="https://mirrors.aliyun.com/golang/$GO_FILE"
-            log_info "使用阿里云镜像: mirrors.aliyun.com"
+            GO_URL="https://mirrors.tuna.tsinghua.edu.cn/golang/$GO_FILE"
+            log_info "使用清华大学镜像: mirrors.tuna.tsinghua.edu.cn"
         else
             GO_URL="https://go.dev/dl/$GO_FILE"
         fi

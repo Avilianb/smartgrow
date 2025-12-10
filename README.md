@@ -21,33 +21,18 @@
 
 适用于 Debian 13 / Ubuntu 20.04+ 系统，自动完成所有配置：
 
-**国内服务器（推荐使用Gitee）：**
-
 ```bash
-# 1. 从Gitee下载安装脚本（国内访问更快）
+# 1. 下载安装脚本
 wget https://gitee.com/jakoale/smartgrow/raw/main/install.sh
 
 # 2. 添加执行权限
 chmod +x install.sh
 
-# 3. 运行安装（会自动询问是否使用国内镜像，选择Y）
-sudo bash install.sh
-```
-
-**国外服务器或GitHub可访问：**
-
-```bash
-# 1. 从GitHub下载安装脚本
-wget https://raw.githubusercontent.com/Avilianb/smartgrow/main/install.sh
-
-# 2. 添加执行权限
-chmod +x install.sh
-
-# 3. 运行安装
+# 3. 运行安装（自动询问是否使用国内镜像，建议选择Y）
 sudo bash install.sh
 
-# 可选：手动指定使用国内镜像
-# USE_CHINA_MIRROR=true sudo bash install.sh
+# 或直接指定使用国内镜像（推荐）
+USE_CHINA_MIRROR=true sudo bash install.sh
 ```
 
 **安装脚本会自动完成：**
@@ -59,16 +44,16 @@ sudo bash install.sh
 - ✅ 创建systemd服务
 - ✅ 启动SmartGrow服务
 
-**国内服务器优化：**
+**国内镜像优化：**
 - 🚀 自动询问是否启用国内镜像加速
 - 📦 代码克隆：优先使用Gitee（最稳定），自动回退ghproxy/GitHub
-- 🌐 Go下载：使用阿里云镜像 mirrors.aliyun.com
+- 🌐 Go下载：使用清华大学镜像 mirrors.tuna.tsinghua.edu.cn
 - 📦 npm安装：使用阿里云镜像 npmmirror.com
 - 🔧 Go模块：配置阿里云代理 mirrors.aliyun.com/goproxy
 
-**代码仓库：**
-- GitHub（国外）: https://github.com/Avilianb/smartgrow
-- Gitee（国内）: https://gitee.com/jakoale/smartgrow
+**项目地址：**
+- Gitee（国内推荐）: https://gitee.com/jakoale/smartgrow
+- GitHub（原始仓库）: https://github.com/Avilianb/smartgrow
 
 **安装完成后：**
 - 访问地址：`http://你的服务器IP:8080`
