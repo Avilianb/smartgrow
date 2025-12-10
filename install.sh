@@ -152,20 +152,35 @@ install_golang() {
             GO_URL="https://go.dev/dl/$GO_FILE"
         fi
 
-        # 显示下载进度，设置超时为10分钟
+        # 下载Go安装包（显示进度）
         log_info "下载 $GO_FILE (约140MB，请耐心等待)..."
-        if ! wget --progress=bar:force --timeout=600 "$GO_URL" 2>&1 | \
-            grep --line-buffered "%" | \
-            sed -u -e "s,\.,,g" | \
-            awk '{printf("\r[下载进度] %s", $0)}'; then
+        if ! wget --show-progress --progress=bar:force --timeout=600 -O "$GO_FILE" "$GO_URL"; then
             log_error "下载失败，请检查网络连接"
+            rm -f "$GO_FILE"
             exit 1
         fi
-        echo ""  # 换行
+
+        # 验证文件是否下载成功
+        if [ ! -f "$GO_FILE" ]; then
+            log_error "下载的文件不存在"
+            exit 1
+        fi
+
+        # 检查文件大小（应该大于100MB）
+        FILE_SIZE=$(stat -f%z "$GO_FILE" 2>/dev/null || stat -c%s "$GO_FILE" 2>/dev/null)
+        if [ "$FILE_SIZE" -lt 100000000 ]; then
+            log_error "下载的文件太小，可能下载不完整"
+            rm -f "$GO_FILE"
+            exit 1
+        fi
 
         log_info "解压Go安装包..."
         rm -rf /usr/local/go
-        tar -C /usr/local -xzf $GO_FILE
+        if ! tar -C /usr/local -xzf $GO_FILE; then
+            log_error "解压失败"
+            rm -f "$GO_FILE"
+            exit 1
+        fi
         rm $GO_FILE
 
         # 添加到PATH
