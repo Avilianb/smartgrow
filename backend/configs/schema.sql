@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- 创建默认管理员账户 (密码: admin123)
 INSERT OR IGNORE INTO users (username, password_hash, role, created_at, updated_at)
-VALUES ('admin', '$2a$10$YourHashedPasswordHere', 'admin', datetime('now'), datetime('now'));
+VALUES ('admin', '$2a$10$A8ZdAbiFcGgdWNO.gTL9tuMYUeIAkAmgl5S7SmdKtFQohLALgGNUG', 'admin', datetime('now'), datetime('now'));
 
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 
