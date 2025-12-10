@@ -47,9 +47,9 @@ sudo bash install.sh
 
 **国内服务器优化：**
 - 🚀 自动询问是否启用国内镜像加速
-- 🌐 Go下载：使用 golang.google.cn
-- 📦 npm安装：使用淘宝镜像 npmmirror.com
-- 🔧 Go模块：配置 goproxy.cn 代理
+- 🌐 Go下载：使用阿里云镜像 mirrors.aliyun.com
+- 📦 npm安装：使用阿里云镜像 npmmirror.com
+- 🔧 Go模块：配置阿里云代理 mirrors.aliyun.com/goproxy
 - 💾 GitHub：使用 ghproxy.com 加速克隆
 
 **安装完成后：**

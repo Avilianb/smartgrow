@@ -42,16 +42,40 @@ show_banner() {
     echo "  SmartGrow 智能灌溉系统安装程序"
     echo "======================================"
     echo ""
+}
 
-    # 询问是否使用国内镜像
-    if [ "$USE_CHINA_MIRROR" != "true" ]; then
-        echo -e "${YELLOW}检测到您可能在使用国内服务器${NC}"
-        read -p "是否使用国内镜像源加速下载？(Y/n) " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-            USE_CHINA_MIRROR=true
-            log_success "已启用国内镜像加速"
+# 询问是否使用国内镜像
+ask_china_mirror() {
+    # 如果环境变量已设置，跳过询问
+    if [ -n "$USE_CHINA_MIRROR" ]; then
+        if [ "$USE_CHINA_MIRROR" = "true" ]; then
+            log_success "已通过环境变量启用国内镜像加速"
         fi
+        return
+    fi
+
+    # 交互式询问
+    echo -e "${YELLOW}========================================${NC}"
+    echo -e "${YELLOW}检测到您可能在使用国内服务器${NC}"
+    echo -e "${YELLOW}========================================${NC}"
+    echo ""
+    echo "国内镜像加速将使用："
+    echo "  • Go下载: 阿里云镜像"
+    echo "  • npm安装: 阿里云镜像 npmmirror.com"
+    echo "  • Go模块: 阿里云代理 mirrors.aliyun.com"
+    echo "  • GitHub: ghproxy.com 加速"
+    echo ""
+    read -p "是否启用国内镜像源？[Y/n] " -r
+    echo ""
+
+    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+        USE_CHINA_MIRROR=true
+        export USE_CHINA_MIRROR
+        log_success "✓ 已启用国内镜像加速"
+    else
+        USE_CHINA_MIRROR=false
+        export USE_CHINA_MIRROR
+        log_info "使用官方源"
     fi
     echo ""
 }
@@ -122,8 +146,8 @@ install_golang() {
 
         # 根据镜像设置选择下载源
         if [ "$USE_CHINA_MIRROR" = "true" ]; then
-            GO_URL="https://golang.google.cn/dl/$GO_FILE"
-            log_info "使用国内镜像: golang.google.cn"
+            GO_URL="https://mirrors.aliyun.com/golang/$GO_FILE"
+            log_info "使用阿里云镜像: mirrors.aliyun.com"
         else
             GO_URL="https://go.dev/dl/$GO_FILE"
         fi
@@ -150,11 +174,11 @@ install_golang() {
         fi
         export PATH=$PATH:/usr/local/go/bin
 
-        # 配置Go模块代理（国内镜像）
+        # 配置Go模块代理（阿里云镜像）
         if [ "$USE_CHINA_MIRROR" = "true" ]; then
-            export GOPROXY=https://goproxy.cn,direct
-            echo 'export GOPROXY=https://goproxy.cn,direct' >> /etc/profile
-            log_info "已配置Go模块代理: goproxy.cn"
+            export GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
+            echo 'export GOPROXY=https://mirrors.aliyun.com/goproxy/,direct' >> /etc/profile
+            log_info "已配置Go模块代理: mirrors.aliyun.com"
         fi
 
         log_success "Go安装完成: $(go version)"
@@ -345,6 +369,7 @@ show_completion() {
 # 主函数
 main() {
     show_banner
+    ask_china_mirror
     check_root
     check_system
 
