@@ -400,8 +400,8 @@ show_completion() {
 # 主函数
 main() {
     show_banner
-    ask_china_mirror
     check_root
+    ask_china_mirror
     check_system
 
     log_info "开始安装SmartGrow系统..."
