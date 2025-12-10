@@ -15,6 +15,43 @@
 
 ---
 
+## 🚀 快速开始（一键安装）
+
+### 自动安装（推荐）
+
+适用于 Debian 13 / Ubuntu 20.04+ 系统，自动完成所有配置：
+
+```bash
+# 1. 下载安装脚本
+wget https://raw.githubusercontent.com/Avilianb/smartgrow/main/install.sh
+
+# 2. 添加执行权限
+chmod +x install.sh
+
+# 3. 运行安装（需要root权限）
+sudo bash install.sh
+```
+
+**安装脚本会自动完成：**
+- ✅ 安装Node.js 18.x和Go 1.21
+- ✅ 克隆项目代码
+- ✅ 安装前后端依赖
+- ✅ 构建前后端代码
+- ✅ 配置数据库
+- ✅ 创建systemd服务
+- ✅ 启动SmartGrow服务
+
+**安装完成后：**
+- 访问地址：`http://你的服务器IP:8080`
+- 默认账户：`admin` / `admin123`
+- 服务管理：`systemctl {start|stop|restart|status} smartgrow`
+
+### 手动安装
+
+如果自动安装失败或需要自定义配置，请参考下方的[详细部署文档](#-部署指南)。
+
+---
+
 ## 📖 项目简介
 
 SmartGrow 是一个完整的物联网智能灌溉解决方案，通过ESP32设备采集环境数据，结合天气预报和动态规划算法，实现自动化、智能化的农作物灌溉管理。
